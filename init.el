@@ -228,7 +228,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Fira Code"
-                               :size 18.0
+                               :size 14.0
                                :antialias 1
                                :weight normal
                                :width normal
@@ -510,6 +510,7 @@ before packages are loaded."
   (add-hook 'elixir-mode-hook
             (lambda ()
               (add-hook 'before-save-hook #'elixir-format nil t)))
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
