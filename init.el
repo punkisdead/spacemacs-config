@@ -58,8 +58,8 @@ This function should only modify configuration layer settings."
      multiple-cursors
      org
      (shell :variables
-             shell-default-height 30
-             shell-default-position 'bottom)
+            shell-default-height 30
+            shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking
      themes-megapack
@@ -79,7 +79,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(direnv)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -210,6 +210,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(zenburn
+                         anti-zenburn
                          spacemacs-dark
                          spacemacs-light)
 
@@ -220,7 +221,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(all-the-icons :separator slant :separator-scale 1.8)
+   dotspacemacs-mode-line-theme '(all-the-icons :separator arrow :separator-scale 1.8)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -228,11 +229,11 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Fira Code"
-                               :size 14.0
+                               :size 10.0
                                :antialias 1
                                :weight normal
                                :width normal
-                               :powerline-scale 1.5)
+                               :powerline-scale 1.0)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -484,6 +485,10 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setq configuration-layer-elpa-archives
+        '(("melpa" . "melpa.org/packages/")
+          ("org" . "orgmode.org/elpa/")
+          ("gnu" . "elpa.gnu.org/packages/")))
   )
 
 (defun dotspacemacs/user-load ()
@@ -499,18 +504,20 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
-  ;;; Fira code
-;; This works when using emacs --daemon + emacsclient
-(add-hook 'after-make-frame-functions (lambda (frame) (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")))
-;; This works when using emacs without server/client
-(set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
-;; I haven't found one statement that makes both of the above situations work, so I use both for now
-
+  (setq truncate-lines nil)
+  (setq history-delete-duplicates t)
   (add-hook 'elixir-mode-hook
             (lambda ()
               (add-hook 'before-save-hook #'elixir-format nil t)))
-  (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
+  (with-eval-after-load 'magit-mode
+    (add-hook 'after-save-hook 'magit-after-save-refresh-status t))
+  (use-package direnv
+    :demand t
+    :config
+    (direnv-mode)
+    (setq direnv-always-show-summary nil)
+    :hook
+    ((prog-mode) . direnv-update-environment))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
