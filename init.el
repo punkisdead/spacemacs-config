@@ -65,6 +65,7 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom)
      ;; spell-checking
+     spacemacs-purpose
      syntax-checking
      themes-megapack
      treemacs
@@ -214,7 +215,10 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(zenburn
-                         anti-zenburn
+                         darkburn
+                         hc-zenburn
+                         material
+                         sanityinc-tomorrow-eighties
                          spacemacs-dark
                          spacemacs-light)
 
@@ -233,7 +237,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Fira Code"
-                               :size 12.0
+                               :size 14.0
                                :antialias 1
                                :weight normal
                                :width normal
@@ -493,6 +497,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
         '(("melpa" . "melpa.org/packages/")
           ("org" . "orgmode.org/elpa/")
           ("gnu" . "elpa.gnu.org/packages/")))
+  (setq default-directory "~/")
+  (setq command-line-default-directory "~/")
   )
 
 (defun dotspacemacs/user-load ()
